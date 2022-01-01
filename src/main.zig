@@ -432,22 +432,22 @@ pub fn main() anyerror!void {
     var iter = std.process.args();
 
     // skip prog name;
-    _ = iter.next(allocator);
+    _ = iter.skip();
 
-    const cmd = iter.next(allocator) orelse usage(null) catch |err| usage(err);
+    const cmd = iter.next(allocator) catch |err| usage(err) orelse usage(null);
 
     if (std.mem.eql(u8, cmd, "verify")) {
-        const pkf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
-        const sigf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
+        const pkf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
+        const sigf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
         verify(pkf, sigf) catch |err| usage(err);
     } else if (std.mem.eql(u8, cmd, "generate")) {
-        const pubf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
-        const secf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
+        const pubf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
+        const secf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
         generate(pubf, secf, 42) catch |err| usage(err);
     } else if (std.mem.eql(u8, cmd, "sign")) {
-        const secf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
-        const msgf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
-        const msgsigf = iter.next(allocator) orelse usage(null) catch |err| usage(err);
+        const secf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
+        const msgf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
+        const msgsigf = iter.next(allocator) catch |err| usage(err) orelse usage(null);
         sign(allocator, secf, msgf, msgsigf) catch |err| usage(err);
     } else {
         usage(null);
